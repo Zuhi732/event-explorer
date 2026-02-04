@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "title": "Tech Innovation Summit 2024",
+    "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop",
+    "price": "Free",
+    "date": "Nov 20, 2024",
+    "location": "Dhaka Convention Hall",
+    "description": "Join the biggest tech summit in the city with global speakers."
+  },
+  {
+    "id": 2,
+    "title": "Art & Craft Exhibition",
+    "image": "https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?q=80&w=800&auto=format&fit=crop",
+    "price": "$20",
+    "date": "Dec 05, 2024",
+    "location": "Shilpakala Academy",
+    "description": "Explore the finest art pieces from local artists and creators."
+  },
+  {
+    "id": 3,
+    "title": "Grand Food Festival",
+    "image": "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=800&auto=format&fit=crop",
+    "price": "$10",
+    "date": "Dec 12, 2024",
+    "location": "Banani Club Field",
+    "description": "Taste cuisines from over 50 different stalls and enjoy live music."
+  },
+  {
+    "id": 4,
+    "title": "Live Music Concert",
+    "image": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=800&auto=format&fit=crop",
+    "price": "$50",
+    "date": "Dec 25, 2024",
+    "location": "Army Stadium",
+    "description": "Rock on with the most popular bands in the country this winter."
+  },
+  {
+    "id": 5,
+    "title": "Digital Marketing Workshop",
+    "image": "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=800&auto=format&fit=crop",
+    "price": "$35",
+    "date": "Jan 10, 2025",
+    "location": "Gulshan Center",
+    "description": "Learn SEO and Social Media marketing from industry experts."
+  },
+  {
+    "id": 6,
+    "title": "Photography Contest",
+    "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=800&auto=format&fit=crop",
+    "price": "$15",
+    "date": "Jan 15, 2025",
+    "location": "Dhanmondi Gallery",
+    "description": "Showcase your photography skills and win exciting prizes."
+  }
+]
