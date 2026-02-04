@@ -1,16 +1,17 @@
-import { updateProfile } from "firebase/auth";
-import { useContext, useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../providers/AuthProvider";
 
 const Register = () => {
-  const { createUser } = useContext(AuthContext);
-  const [registerError, setRegisterError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const { createUser, updateUserProfile, logOut } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+  }, []);
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -20,128 +21,129 @@ const Register = () => {
     const email = form.get("email");
     const password = form.get("password");
 
-    // এরর রিসেট
-    setRegisterError("");
-    setSuccess("");
-
-    // পাসওয়ার্ড ভ্যালিডেশন (Assignment Requirement)
     if (password.length < 6) {
-      setRegisterError("Password should be at least 6 characters.");
+      toast.error("Password must be at least 6 characters");
       return;
     } else if (!/[A-Z]/.test(password)) {
-      setRegisterError("Password must have at least one uppercase letter.");
+      toast.error("Password must contain at least one capital letter");
       return;
-    } else if (!/[a-z]/.test(password)) {
-      setRegisterError("Password must have at least one lowercase letter.");
+    } else if (!/[!@#$%^&*]/.test(password)) {
+      toast.error(
+        "Password must contain at least one special character (!@#$%^&*)",
+      );
       return;
     }
 
-    // ইউজার তৈরি
     createUser(email, password)
       .then((result) => {
-        const user = result.user;
-        console.log(user);
-        setSuccess("User Created Successfully");
-        toast.success("Registration successful!");
-
-        // প্রোফাইল আপডেট (নাম ও ছবি)
-        updateProfile(user, {
-          displayName: name,
-          photoURL: photo,
-        })
+        console.log(result.user);
+        updateUserProfile(name, photo)
           .then(() => {
-            // সফল হলে হোম পেজে নিয়ে যাবে এবং পেজ রিলোড হবে যাতে নাম আপডেট হয়
-            navigate("/");
-            window.location.reload();
+            toast.success("User created successfully. Please Login.");
+            logOut();
+            navigate("/login");
           })
-          .catch((error) => console.log(error));
+          .catch((error) => console.error(error));
       })
       .catch((error) => {
         console.error(error);
-        setRegisterError(error.message);
         toast.error(error.message);
       });
   };
 
   return (
-    <div className="hero min-h-screen bg-base-200">
-      <div className="hero-content flex-col">
-        <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold mb-6">Register now!</h1>
-        </div>
-        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form onSubmit={handleRegister} className="card-body">
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Name</span>
-              </label>
-              <input
-                type="text"
-                name="name"
-                placeholder="Your Name"
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Photo URL</span>
-              </label>
-              <input
-                type="text"
-                name="photo"
-                placeholder="Photo URL"
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Email</span>
-              </label>
-              <input
-                type="email"
-                name="email"
-                placeholder="email"
-                className="input input-bordered"
-                required
-              />
-            </div>
-            <div className="form-control relative">
-              <label className="label">
-                <span className="label-text">Password</span>
-              </label>
-              <input
-                type={showPassword ? "text" : "password"}
-                name="password"
-                placeholder="password"
-                className="input input-bordered w-full"
-                required
-              />
-              {/* চোখ আইকন (Show/Hide) */}
-              <span
-                className="absolute top-12 right-3 cursor-pointer"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
-            </div>
-
-            {/* এরর মেসেজ */}
-            {registerError && (
-              <p className="text-red-500 text-sm mt-2">{registerError}</p>
-            )}
-
-            <div className="form-control mt-6">
-              <button className="btn btn-primary">Register</button>
-            </div>
-          </form>
-          <p className="p-4 text-center">
-            Already have an account?{" "}
-            <Link className="text-blue-600 font-bold" to="/login">
-              Login
-            </Link>
+    <div className="hero min-h-screen pt-20 pb-10">
+      <div className="hero-content flex-col lg:flex-row-reverse gap-10">
+        {/* Left Side Text */}
+        <div
+          className="text-center lg:text-left text-white w-full lg:w-1/3"
+          data-aos="fade-left"
+        >
+          <h1 className="text-5xl font-bold text-gradient">Join Us!</h1>
+          <p className="py-6 text-gray-300">
+            Create an account to explore amazing events and manage your bookings
+            easily.
           </p>
+        </div>
+
+        {/* Stylish Card Shape (Same as Login) */}
+        <div
+          className="card flex-shrink-0 w-full max-w-md shadow-2xl glass-effect border border-white/10 rounded-tl-[60px] rounded-br-[60px] rounded-tr-lg rounded-bl-lg overflow-hidden"
+          data-aos="zoom-in"
+        >
+          <div className="card-body p-10">
+            <h2 className="text-3xl font-bold text-center text-white mb-6">
+              Register
+            </h2>
+            <form onSubmit={handleRegister}>
+              <div className="form-control mb-4">
+                <label className="label">
+                  <span className="label-text text-white font-semibold">
+                    Name
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  className="input input-bordered bg-white/10 text-white border-neonBlue/50 focus:border-neonPink focus:outline-none focus:ring-1 focus:ring-neonPink rounded-xl"
+                  required
+                />
+              </div>
+              <div className="form-control mb-4">
+                <label className="label">
+                  <span className="label-text text-white font-semibold">
+                    Photo URL
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  name="photo"
+                  className="input input-bordered bg-white/10 text-white border-neonBlue/50 focus:border-neonPink focus:outline-none focus:ring-1 focus:ring-neonPink rounded-xl"
+                  required
+                />
+              </div>
+              <div className="form-control mb-4">
+                <label className="label">
+                  <span className="label-text text-white font-semibold">
+                    Email
+                  </span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  className="input input-bordered bg-white/10 text-white border-neonBlue/50 focus:border-neonPink focus:outline-none focus:ring-1 focus:ring-neonPink rounded-xl"
+                  required
+                />
+              </div>
+              <div className="form-control mb-6">
+                <label className="label">
+                  <span className="label-text text-white font-semibold">
+                    Password
+                  </span>
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  className="input input-bordered bg-white/10 text-white border-neonBlue/50 focus:border-neonPink focus:outline-none focus:ring-1 focus:ring-neonPink rounded-xl"
+                  required
+                />
+              </div>
+              <div className="form-control mt-2">
+                <button className="btn btn-3d rounded-full text-lg uppercase tracking-wider">
+                  Register
+                </button>
+              </div>
+            </form>
+            <p className="text-center mt-6 text-gray-300 text-sm">
+              Already have an account?
+              <Link
+                className="text-neonBlue font-bold ml-2 hover:text-neonPink transition-colors"
+                to="/login"
+              >
+                Login
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
